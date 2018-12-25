@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xuchaoyue.second.user.mapper.UserMapper">
+
+<resultMap id="BaseResultMap" type="com.xuchaoyue.second.user.model.UserModel">
+	<result column="id" property="id" />
+	<result column="usercode" property="usercode" />
+	<result column="username" property="username" />
+	<result column="password" property="password" />
+</resultMap>
+<sql id="Base_Column_List">
+	id,usercode,username,password
+</sql>
+
+<!-- 查询条件 -->
+<sql id="Example_Where_Clause">
+	where 1=1
+	<if test="id !=null">
+		and id=#{id}
+	</if>
+	<if test="usercode != null and usercode != ''">
+		and usercode = #{usercode}
+	</if>
+	<if test="username != null and username != ''">
+		and username = #{username}
+	</if>
+	<if test="password != null and password != ''">
+		and password = #{password}
+	</if>
+</sql>
+<insert id="insert" parameterType="Object">
+<!-- 	<selectKey resultType="java.lang.Integer" order="AFTER" -->
+<!-- 		keyProperty="id"> -->
+<!-- 		SELECT LAST_INSERT_ID() -->
+<!-- 	</selectKey> -->
+	insert into sys.user(usercode,username,password)
+	values(#{usercode},#{username},#{password})
+</insert>
+<!-- 删除记录 -->
+<delete id="delete" parameterType="Object">
+	delete from sys.user where username = #{username}
+</delete>
+<!-- #自动在外面加上引号$不会自动加引号比如Limit后面希望加数字 -->
+<update id="update" parameterType="Object">
+	update sys.user set
+	<trim suffixOverrides=",">
+		<if test="usercode != null and usercode != '' ">
+			usercode = #{usercode},
+		</if>
+		<if test="password != null and password != '' ">
+			password = #{password},
+		</if>
+	</trim>
+	where username = #{username}
+</update>
+<select id="select1" resultMap="BaseResultMap" parameterType="Object">
+	select
+	<include refid="Base_Column_List"/>
+		from sys.user
+		<include refid="Example_Where_Clause"></include>
+</select>
+
+
+<select id="selectCount" resultType="int"
+	parameterType="Object">
+	select count(1) from sys.user
+	<include refid="Example_Where_Clause"/>
+</select>
+<select id="pager" resultMap="BaseResultMap"
+parameterType="Object">
+select <include refid="Base_Column_List"/>
+from sys.user limit ${rowStart},${pageLimit}
+
+</select>
+</mapper>

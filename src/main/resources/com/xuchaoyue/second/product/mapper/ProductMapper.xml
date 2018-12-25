@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xuchaoyue.second.product.mapper.ProductMapper">
+
+<resultMap id="BaseResultMap" type="com.xuchaoyue.second.product.model.ProductModel">
+	<result column="id" property="id" />
+	<result column="name" property="name" />
+	<result column="price" property="price" />
+	<result column="img" property="img" />
+	<result column="productid" property="productid" />
+	<result column="status" property="status" />
+	<result column="information" property="information" />
+	<result column="code" property="code" />
+	<result column="number" property="number" />
+	<result column="bigparentcode" property="bigparentcode" />
+	<result column="bigname" property="bigname" />
+	<result column="type" property="type" />
+	<result column="url" property="url" />
+	
+
+	
+	
+	
+</resultMap>
+<sql id="Base_Column_List">
+	id,productid,code,img,price,name,status,information,number
+</sql>
+<sql id="Base_Column_List1">
+	id,bigparentcode,bigname,code
+</sql>
+<sql id="Base_Column_List2">
+	id,productid,url,type
+</sql>
+
+
+<!-- 查询条件 -->
+<sql id="Example_Where_Clause">
+	where 1=1
+	<if test="id !=null">
+		and id=#{id}
+	</if>
+	<if test="productid != null and productid != ''">
+		and productid = #{productid}
+	</if>
+	<if test="name != null and name != ''">
+		and name = #{name}
+	</if>
+	<if test="code != null and code != ''">
+		and code = #{code}
+	</if>
+		<if test="price != null and price != ''">
+		and price = #{price}
+	</if>
+		<if test="img != null and img != ''">
+		and img = #{img}
+	</if>
+<if test="information != null and information != ''">
+		and information = #{information}
+	</if><if test="number != null and number != ''">
+		and number = #{number}
+	</if><if test="status != null and status != ''">
+		and status = #{status}
+	</if>
+</sql>
+<sql id="Example_Where_Clause1">
+	where 1=1
+	<if test="id !=null">
+		and id=#{id}
+	</if>
+	<if test="bigparentcode != null and bigparentcode != ''">
+		and bigparentcode = #{bigparentcode}
+	</if>
+	<if test="code != null and code != ''">
+		and code = #{code}
+	</if>
+	<if test="bigname != null and bigname != ''">
+		and bigname = #{bigname}
+	</if>
+	
+</sql>
+<sql id="Example_Where_Clause3">
+	where 1=1
+	<if test="id !=null">
+		and id=#{id}
+	</if>
+	<if test="productid != null and productid != ''">
+		and productid = #{productid}
+	</if>
+	<if test="url != null and url != ''">
+		and url = #{url}
+	</if>
+	<if test="type != null and type != ''">
+		and type = #{type}
+	</if>
+	
+</sql>
+<insert id="insert" parameterType="Object">
+<!-- 	<selectKey resultType="java.lang.Integer" order="AFTER" -->
+<!-- 		keyProperty="id"> -->
+<!-- 		SELECT LAST_INSERT_ID() -->
+<!-- 	</selectKey> -->
+	insert into sys.product(productid,name,code,price,img,number,status,information)
+	values(#{productid},#{name},#{code},#{price},#{img},#{number},#{status},#{information})
+</insert>
+<insert id="insert1" parameterType="Object">
+<!-- 	<selectKey resultType="java.lang.Integer" order="AFTER" -->
+<!-- 		keyProperty="id"> -->
+<!-- 		SELECT LAST_INSERT_ID() -->
+<!-- 	</selectKey> -->
+	insert into sys.bigproduct(bigparentcode,bigname,code)
+	values(#{bigparentcode},#{bigname},#{code})
+</insert>
+<insert id="insert4" parameterType="Object">
+<!-- 	<selectKey resultType="java.lang.Integer" order="AFTER" -->
+<!-- 		keyProperty="id"> -->
+<!-- 		SELECT LAST_INSERT_ID() -->
+<!-- 	</selectKey> -->
+	insert into sys.productimage(productid,url,type)
+	values(#{productid},#{url},#{type})
+</insert>
+<!-- 删除记录 -->
+<delete id="delete" parameterType="Object">
+	delete from sys.product where productid = #{productid}
+</delete>
+<!-- #自动在外面加上引号$不会自动加引号比如Limit后面希望加数字 -->
+<update id="update" parameterType="Object">
+	update sys.product set
+	<trim suffixOverrides=",">
+		<if test="name != null and name != '' ">
+			name = #{name},
+		</if>
+		<if test="code != null and code != '' ">
+			code = #{code},
+		</if>
+			<if test="img != null and img != '' ">
+			img = #{img},
+		</if>
+			<if test="price != null and price != '' ">
+			price = #{price},
+		</if>
+		<if test="number != null and number != '' ">
+			number = #{number},
+		</if><if test="status != null and status != '' ">
+			status = #{status},
+		</if><if test="information != null and information != '' ">
+			information = #{information},
+		</if><if test="price != null and price != '' ">
+			price = #{price},
+		</if>
+	</trim>
+	where productid = #{productid}
+</update>
+<select id="select1" resultMap="BaseResultMap" parameterType="Object">
+	select
+	<include refid="Base_Column_List1"></include>
+		from sys.bigproduct
+		<include refid="Example_Where_Clause1"></include>
+</select>
+<select id="select3" resultMap="BaseResultMap" parameterType="Object">
+	select
+	<include refid="Base_Column_List"></include>
+		from sys.product
+		<include refid="Example_Where_Clause"></include>
+</select>
+<select id="select2" resultMap="BaseResultMap" parameterType="Object">
+	select
+	  id,code,bigparentcode,bigname
+		from  sys.bigproduct where bigparentcode="无上级"
+	
+</select>
+<select id="selectimage" resultMap="BaseResultMap" parameterType="Object">
+	select
+	 <include refid="Base_Column_List2"></include>
+		from  sys.productimage 
+		<include refid="Example_Where_Clause3"></include>
+	
+</select>
+
+
+<select id="selectCount" resultType="int"
+	parameterType="Object">
+	select count(1) from sys.product
+	<include refid="Example_Where_Clause"/>
+</select>
+<select id="selectCount1" resultType="int"
+	parameterType="Object">
+	select count(1) from sys.bigproduct
+	<include refid="Example_Where_Clause"/>
+</select>
+
+<select id="pager" resultMap="BaseResultMap"
+parameterType="Object">
+select <include refid="Base_Column_List"/>
+from sys.product limit ${rowStart},${pageLimit}
+
+</select>
+<select id="pager1" resultMap="BaseResultMap"
+parameterType="Object">
+select <include refid="Base_Column_List1"/>
+from sys.bigproduct limit ${rowStart},${pageLimit}
+
+</select>
+<select id="select1all" resultMap="BaseResultMap"
+parameterType="Object">
+select 
+<include refid="Base_Column_List"/>
+from sys.product
+<include refid="Example_Where_Clause"/>
+
+
+</select>
+</mapper>

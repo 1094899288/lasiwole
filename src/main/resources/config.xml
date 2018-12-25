@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC 
+"-//mybatis.org//DTD Config 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-config.dtd">
+
+<configuration>
+	<settings>
+		<!-- 打印执行过程中输出语句 -->
+		<setting name="logImpl" value="STDOUT_LOGGING" />
+	</settings>
+
+	<typeAliases>
+
+	</typeAliases>
+
+	<mappers>
+		<mapper resource="com/xuchaoyue/second/user/mapper/UserMapper.xml" />
+		<mapper resource="com/xuchaoyue/second/product/mapper/ProductMapper.xml" />
+		<mapper resource="com/xuchaoyue/second/order/mapper/OrderMapper.xml" />
+		<mapper resource="com/xuchaoyue/second/shopcart/mapper/ShopMapper.xml" />
+
+	</mappers>
+
+</configuration>

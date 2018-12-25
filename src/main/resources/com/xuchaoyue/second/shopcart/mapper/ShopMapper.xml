@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xuchaoyue.second.shopcart.mapper.ShopMapper">
+
+<resultMap id="BaseResultMap" type="com.xuchaoyue.second.shopcart.model.ShopModel">
+	<result column="id" property="id" />
+
+	<result column="productid" property="productid" />
+	<result column="number" property="number" />
+	<result column="username" property="username" />
+	<result column="url" property="url" />
+	<result column="name" property="name" />
+	<result column="price" property="price" />
+
+	
+	
+	
+</resultMap>
+<sql id="Base_Column_List">
+	c.id,c.productid,c.number,c.username
+	,(select a.url from sys.productimage as a where a.productid = c.productid and a.type = 1)url
+	,(select d.price from sys.product as d where d.productid = c.productid)price
+	,(select x.name from sys.product as x where x.productid = c.productid)name
+</sql>
+
+
+<!-- 查询条件 -->
+<sql id="Example_Where_Clause">
+	where 1=1
+	<if test="id !=null">
+		and id=#{id}
+	</if>
+	<if test="number != null and number != ''">
+		and number = #{number}
+	</if>
+	
+	<if test="productid != null and productid != ''">
+		and productid = #{productid}
+	</if>
+		<if test="username != null and username != ''">
+		and username = #{username}
+	</if>
+		
+
+</sql>
+<sql id="Example_Where_Clause1">
+	where 1=1
+	<if test="id !=null">
+		and id=#{id}
+	</if>
+	<if test="bigparentcode != null and bigparentcode != ''">
+		and bigparentcode = #{bigparentcode}
+	</if>
+	<if test="code != null and code != ''">
+		and code = #{code}
+	</if>
+	<if test="bigname != null and bigname != ''">
+		and bigname = #{bigname}
+	</if>
+	
+</sql>
+<insert id="insert" parameterType="Object">
+<!-- 	<selectKey resultType="java.lang.Integer" order="AFTER" -->
+<!-- 		keyProperty="id"> -->
+<!-- 		SELECT LAST_INSERT_ID() -->
+<!-- 	</selectKey> -->
+	insert into sys.shopcart(productid,username,number)
+	values(#{productid},#{username},#{number})
+</insert>
+
+<!-- 删除记录 -->
+<delete id="delete" parameterType="Object">
+	delete from sys.shopcart where id = #{id}
+</delete>
+<!-- #自动在外面加上引号$不会自动加引号比如Limit后面希望加数字 -->
+<update id="uptate" parameterType="Object">
+	update sys.shopcart set
+	<trim suffixOverrides=",">
+		<if test="productid != null and productid != '' ">
+			productid = #{productid},
+		</if>
+			<if test="number != null and number != '' ">
+			number = #{number}
+			</if>
+		
+	</trim>
+	where id = #{id}
+</update>
+
+<select id="select" resultMap="BaseResultMap" parameterType="Object">
+	select
+	<include refid="Base_Column_List"></include>
+		from sys.shopcart as c
+		<include refid="Example_Where_Clause"></include>
+</select>
+
+<select id="selectmodel" resultMap="BaseResultMap" parameterType="Object">
+	select
+	<include refid="Base_Column_List"></include>
+		from sys.shopcart as c
+		<include refid="Example_Where_Clause"></include>
+</select>
+
+
+<select id="selectCount" resultType="int"
+	parameterType="Object">
+	select count(1) from sys.shopcart as c
+	<include refid="Example_Where_Clause"/>
+</select>
+<select id="selectCount1" resultType="int"
+	parameterType="Object">
+	select count(1) from sys.shopcart as c
+	<include refid="Example_Where_Clause"/>
+</select>
+
+<select id="pager" resultMap="BaseResultMap"
+parameterType="Object">
+select <include refid="Base_Column_List"/>
+from sys.shopcart limit ${rowStart},${pageLimit}
+
+</select>
+
+</mapper>

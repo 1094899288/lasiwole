@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xuchaoyue.second.order.mapper.OrderMapper">
+
+<resultMap id="BaseResultMap" type="com.xuchaoyue.second.order.ordermodel.OrderModel">
+	<result column="id" property="id" />
+	<result column="orderid" property="orderid" />
+	<result column="customer" property="customer" />
+	<result column="address" property="address" />
+	<result column="status" property="status" />
+    <result column="time" property="time"/>
+    <result column="name" property="name"/>
+    <result column="number" property="number"/>
+	
+	
+</resultMap>
+<sql id="Base_Column_List">
+	id,time,orderid,customer,address,status
+</sql>
+
+<!-- 查询条件 -->
+<sql id="Example_Where_Clause">
+	where 1=1
+	<if test="id !=null">
+		and id=#{id}
+	</if>
+	<if test="orderid != null and orderid != ''">
+		and orderid = #{orderid}
+	</if>
+	<if test="customer != null and customer != ''">
+		and customer = #{customer}
+	</if>
+	<if test="address != null and address != ''">
+		and address = #{address}
+	</if>
+		<if test="status != null and status != ''">
+		and status = #{status}
+	</if>
+	<if test="time != null and time != ''">
+		and time = #{time}
+	</if>
+		<if test="name != null and name != ''">
+		and name = #{name}
+	</if>	<if test="number != null and number != ''">
+		and number = #{number}
+	</if>
+</sql>
+<insert id="insert" parameterType="Object">
+<!-- 	<selectKey resultType="java.lang.Integer" order="AFTER" -->
+<!-- 		keyProperty="id"> -->
+<!-- 		SELECT LAST_INSERT_ID() -->
+<!-- 	</selectKey> -->
+	insert into sys.order(orderid,customer,address,status,time)
+	values(#{orderid},#{customer},#{address},#{status},now())
+</insert>
+<insert id="insert1" parameterType="Object">
+<!-- 	<selectKey resultType="java.lang.Integer" order="AFTER" -->
+<!-- 		keyProperty="id"> -->
+<!-- 		SELECT LAST_INSERT_ID() -->
+<!-- 	</selectKey> -->
+	insert into sys.orderproduct(orderid,name,number)
+	values(#{orderid},#{name},#{number})
+</insert>
+<!-- 删除记录 -->
+<delete id="delete" parameterType="Object">
+	delete from sys.order where orderid = #{orderid}
+</delete>
+<!-- #自动在外面加上引号$不会自动加引号比如Limit后面希望加数字 -->
+<update id="update" parameterType="Object">
+	update sys.order set
+	<trim suffixOverrides=",">
+		<if test="orderid != null and orderid != '' ">
+			orderid = #{orderid},
+		</if>
+		<if test="customer != null and customer != '' ">
+			customer = #{customer},
+		</if>
+			<if test="address != null and address != '' ">
+			address = #{address},
+		</if>
+			<if test="status != null and status != '' ">
+			status = #{status},
+		</if>
+		<if test="status != null and status != '' ">
+			time = #{time},
+		</if>
+	</trim>
+	where orderid = #{orderid}
+</update>
+<select id="select1" resultMap="BaseResultMap" parameterType="Object">
+	select
+	<include refid="Base_Column_List"/>
+		from sys.order
+		<include refid="Example_Where_Clause"></include>
+</select>
+
+
+
+<select id="selectCount" resultType="int"
+	parameterType="Object">
+	select count(1) from sys.order
+	<include refid="Example_Where_Clause"/>
+</select>
+<select id="selectCount1" resultType="int"
+	parameterType="Object">
+	select count(1) from sys.orderproduct
+	<include refid="Example_Where_Clause"/>
+</select>
+
+<select id="pager" resultMap="BaseResultMap"
+parameterType="Object">
+select <include refid="Base_Column_List"/>
+from sys.order 
+<include refid="Example_Where_Clause"></include>
+order by time desc limit ${rowStart},${pageLimit}
+
+</select>
+<select id="pager1" resultMap="BaseResultMap"
+parameterType="Object">
+select orderid,name,number
+from sys.orderproduct 
+<include refid="Example_Where_Clause"></include>
+limit ${rowStart},${pageLimit}
+
+</select>
+</mapper>
